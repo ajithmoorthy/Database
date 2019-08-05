@@ -1,0 +1,86 @@
+
+-----INSERTION USING THE STORED PROCEDURE--
+select * from [dbo].[Customer]
+ alter procedure insertion
+ @custmerid int,
+ @PersonId int,
+ @StoreId int,
+ @AccountNumber nvarchar(25),
+ @mail varchar(25)
+ as
+ begin
+ insert into [dbo].[Customer]  ([CustomerId]
+           ,[PersonID]
+           ,[StoreID]
+           ,[AccountNumber]
+		   ,[CustmailId])
+	values	(@custmerid,
+			@PersonId,
+			@StoreId,
+			@AccountNumber,
+			@mail)
+ end
+
+exec insertion 1168,8,950,40046700523,amrit@gmailcom;
+
+
+==========================================================================
+ -----------------------DELETE USING THE STORED PROCEDURE-----------------
+ create procedure delete2
+ @Myid int
+ as
+ begin
+ delete from [dbo].[Customer] where CustomerID=@Myid
+ end
+
+exec delete2 1132
+
+============================================================================
+ ----------FETCHING USING THE STORED PROCEDURE------------
+  create procedure fetching
+ as
+ begin
+ select * from [dbo].[Customer]
+ end
+
+exec fetching
+=============================================================================
+ -----------UPDATE USING THE STORED PROCEDURE------------
+ alter procedure updating2
+ @cust int
+ as
+ begin 
+update [dbo].[Customer] set ModifiedDate=SYSDATETIME() where CustomerID=@cust
+ end
+
+
+exec updating2 1126
+===============================================================================
+ alter procedure updating1
+ as
+ begin
+alter table [dbo].[Customer] add ModifiedDate datetime;
+ end
+================================================================================
+ ------------------EXECUTE THE COMMAND-------------------
+ exec updating 3,1134
+ exec fetching
+ ===============================================================================
+ 
+ ------creating the index for the dbo.customer-----
+ 
+ create NONCLUSTERED index person on dbo.Customer(StoreID);
+ select * from [dbo].[Customer] where CustomerID=1164;
+ select * from [dbo].[Customer] with(index(person)) where CustomerId=1166;
+ ================================================================================
+ ---creating the index for the sales.customer-----
+ create index customerindex on Sales.Customer(StoreId,PersonId)
+ ---fetch by specific value without index-----
+ select * from [Sales].[Customer];
+=================================================================================
+ ---fetch by specific value with index-----
+ select * from  [Sales].[Customer] with(index(customerindex)) where StoreID=1210 AND PersonID=1209;
+ exec updating1
+==================================================================================
+  select * from [dbo].[Customer]
+ 
